@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  app-frontend:
+    build: 
+      context: ./frontend
+      target: production
+    ports:
+      - "80:80"
+    depends_on:
+      - app-backend
+    networks:
+      default:
+        aliases:
+          - farm-fe
+
+  app-backend:
+    build: ./backend
+    env_file:
+      - backend/.env
+    ports:
+      - "8000:8000"
+    expose:
+      - "8000"
+    depends_on: 
+      - database
+    networks:
+      default:
+        aliases:
+          - farm.api
+
+  database:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+    env_file:
+      - backend/.env
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+    volumes:
+      - datastore:/data/db
+    command: --bind_ip 0.0.0.0
+
+volumes:
+  datastore:
+
