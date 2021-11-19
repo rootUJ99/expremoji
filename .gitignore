@@ -165,3 +165,8 @@ cython_debug/
 # Text Editor
 .vscode
 
+
+# notebooks
+
+/notebooks/data
+
